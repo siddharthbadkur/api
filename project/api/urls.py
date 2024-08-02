@@ -4,8 +4,8 @@ from api.views import *
 
 urlpatterns = [
 
-    # path('userlist/',userList,name='userlist'),
-    path('userdetails/<int:pk>',userDetails,name='userdetails')
+    path('movie_list/',movie_list,name='movie_list'),
+    path('movie_details/<int:pk>',movie_details,name='movie_details')
     # path('list/',list,name='list')
 
     
