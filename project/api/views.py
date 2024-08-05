@@ -1,17 +1,26 @@
-from django.shortcuts import render
-from .models import *
-from .serializers import *
-from  django.http import JsonResponse,HttpResponse
-from rest_framework.renderers import JSONRenderer
-from rest_framework.parsers import JSONParser
-from rest_framework.parsers import json
-from django.views.decorators.csrf import csrf_exempt
-from rest_framework.response import Response 
+from .models import Studentapi
+from .serializers import Studentserializer
+from django.http import Http404
+from rest_framework.views import APIView
+from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.decorators import api_view 
 
-import io
-@csrf_exempt
+
+
+# from django.shortcuts import render
+# from .models import *
+# from .serializers import *
+# from  django.http import JsonResponse,HttpResponse
+# from rest_framework.renderers import JSONRenderer
+# from rest_framework.parsers import JSONParser
+# from rest_framework.parsers import json
+# from django.views.decorators.csrf import csrf_exempt
+# from rest_framework.response import Response 
+# from rest_framework import status
+# from rest_framework.decorators import api_view 
+
+# import io
+# @csrf_exempt
 #------------by httpresponse--------------------
 
 # Create your views here.
@@ -127,52 +136,52 @@ import io
 #             res = {'msg': 'id not present in Database'}
 #             return JsonResponse(res)
 
-#function based api
-@api_view(['GET', 'POST'])  
-def movie_list(request): 
-    if request.method=='GET':
-        movies = Studentapi.objects.all() 
-        serializer=Studentserializer(movies,many=True)
-        return Response(serializer.data) 
+# #function based api
+# @api_view(['GET', 'POST'])  
+# def movie_list(request): 
+#     if request.method=='GET':
+#         movies = Studentapi.objects.all() 
+#         serializer=Studentserializer(movies,many=True)
+#         return Response(serializer.data) 
     
-    elif request.method=='POST':
-        serializer=Studentserializer(data=request.data) 
-        if serializer.is_valid(): 
-            serializer.save() 
-            return Response(serializer.data) 
-        else: return Response(serializer.errors)
+#     elif request.method=='POST':
+#         serializer=Studentserializer(data=request.data) 
+#         if serializer.is_valid(): 
+#             serializer.save() 
+#             return Response(serializer.data) 
+#         else: return Response(serializer.errors)
 
-@api_view(['GET', 'PUT','DELETE']) 
-def movie_details(request,pk):
-    id = Studentapi.objects.get(pk=pk)
-    if id:
-        if request.method=='GET': 
-            movie=Studentapi.objects.get(pk=pk) 
-            serializer = Studentserializer(movie) 
-            return Response(serializer.data) 
+# @api_view(['GET', 'PUT','DELETE']) 
+# def movie_details(request,pk):
+#     id = Studentapi.objects.get(pk=pk)
+#     if id:
+#         if request.method=='GET': 
+#             movie=Studentapi.objects.get(pk=pk) 
+#             serializer = Studentserializer(movie) 
+#             return Response(serializer.data) 
         
-        elif request.method=='PUT': 
-            movie=Studentapi.objects.get(pk=pk) 
-            serializer = Studentserializer(movie,data=request.data,partial=True) 
-            if serializer.is_valid(): 
-                serializer.save() 
-                return Response(serializer.data) 
-            else: return Response(serializer.errors) 
+#         elif request.method=='PUT': 
+#             movie=Studentapi.objects.get(pk=pk) 
+#             serializer = Studentserializer(movie,data=request.data,partial=True) 
+#             if serializer.is_valid(): 
+#                 serializer.save() 
+#                 return Response(serializer.data) 
+#             else: return Response(serializer.errors) 
         
-        elif request.method=='PATCH': 
-            movie=Studentapi.objects.get(pk=pk) 
-            serializer = Studentserializer(movie,data=request.data,partial=True) 
-            if serializer.is_valid(): 
-                serializer.save() 
-                return Response(serializer.data) 
-            else: return Response(serializer.errors) 
-        elif request.method=='DELETE': 
-                movie=Studentapi.objects.get(pk=pk) 
-                movie.delete() 
-                return Response({'msg':"Data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-    else:
-        res = {'msg': 'id not present in Database'}
-        return Response(res)
+#         elif request.method=='PATCH': 
+#             movie=Studentapi.objects.get(pk=pk) 
+#             serializer = Studentserializer(movie,data=request.data,partial=True) 
+#             if serializer.is_valid(): 
+#                 serializer.save() 
+#                 return Response(serializer.data) 
+#             else: return Response(serializer.errors) 
+#         elif request.method=='DELETE': 
+#                 movie=Studentapi.objects.get(pk=pk) 
+#                 movie.delete() 
+#                 return Response({'msg':"Data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+#     else:
+#         res = {'msg': 'id not present in Database'}
+#         return Response(res)
      
 
     
@@ -184,57 +193,98 @@ def movie_details(request,pk):
 
 
 
-def list(request):
-    if request.method =="GET":
-        user =  Studentapi.objects.all()
-        serializer_data = Studentserializer(user,many=True)
-        # print(serializer_data.data)
-        json_data = JSONRenderer().render(serializer_data.data)
-        return HttpResponse(json_data,content_type = 'application/json')
+# def list(request):
+#     if request.method =="GET":
+#         user =  Studentapi.objects.all()
+#         serializer_data = Studentserializer(user,many=True)
+#         # print(serializer_data.data)
+#         json_data = JSONRenderer().render(serializer_data.data)
+#         return HttpResponse(json_data,content_type = 'application/json')
     
-    elif request.method == 'POST':
-        json_data = request.body
-        stream = io.BytesIO(json_data) 
-        python_data = JSONParser().parse(stream)
-        serializer = Studentserializer(data = python_data)
-        if serializer.is_valid():
-            serializer.save()
-            res = {'msg': 'Data Created'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data, content_type='application/json')
-        json_data = JSONRenderer().render(serializer.errors)
-        return HttpResponse(json_data, content_type='application/json')
+#     elif request.method == 'POST':
+#         json_data = request.body
+#         stream = io.BytesIO(json_data) 
+#         python_data = JSONParser().parse(stream)
+#         serializer = Studentserializer(data = python_data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             res = {'msg': 'Data Created'}
+#             json_data = JSONRenderer().render(res)
+#             return HttpResponse(json_data, content_type='application/json')
+#         json_data = JSONRenderer().render(serializer.errors)
+#         return HttpResponse(json_data, content_type='application/json')
     
-    elif request.method=='PUT':
+#     elif request.method=='PUT':
          
 
-        json_data = request.body
-        stream = io.BytesIO(json_data) 
-        python_data = JSONParser().parse(stream)
-        id=python_data.get('id')
-        stu=Studentapi.objects.get(id=id)
-        serializer = Studentserializer(stu,data = python_data,partial=True)
+#         json_data = request.body
+#         stream = io.BytesIO(json_data) 
+#         python_data = JSONParser().parse(stream)
+#         id=python_data.get('id')
+#         stu=Studentapi.objects.get(id=id)
+#         serializer = Studentserializer(stu,data = python_data,partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             res = {'msg': 'Data Created'}
+#             json_data = JSONRenderer().render(res)
+#             return HttpResponse(json_data, content_type='application/json')
+#         json_data = JSONRenderer().render(serializer.errors)
+#         return HttpResponse(json_data, content_type='application/json')
+
+#     elif request.method == 'DELETE':   
+#         json_data = request.body
+#         stream = io.BytesIO(json_data)
+#         python_data = JSONParser().parse(stream)
+#         id = python_data.get('id')
+#         if id:
+#             stu = Studentapi.objects.get(id=id)
+#             stu.delete()
+#             res = {'msg': 'Data Deleted!!'}
+#             return JsonResponse(res, safe=False)
+#         else:
+#             res = {'msg': 'id not present in Database'}
+#         return JsonResponse(res)
+#class based api
+class Customer_list(APIView):
+    """
+    List all snippets, or create a new snippet.
+    """
+    def get(self, request,):
+        snippets = Studentapi.objects.all()
+        serializer = Studentserializer(snippets, many=True)
+        return Response(serializer.data)
+
+    def post(self, request,):
+        serializer = Studentserializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            res = {'msg': 'Data Created'}
-            json_data = JSONRenderer().render(res)
-            return HttpResponse(json_data, content_type='application/json')
-        json_data = JSONRenderer().render(serializer.errors)
-        return HttpResponse(json_data, content_type='application/json')
-
-    elif request.method == 'DELETE':   
-        json_data = request.body
-        stream = io.BytesIO(json_data)
-        python_data = JSONParser().parse(stream)
-        id = python_data.get('id')
-        if id:
-            stu = Studentapi.objects.get(id=id)
-            stu.delete()
-            res = {'msg': 'Data Deleted!!'}
-            return JsonResponse(res, safe=False)
-        else:
-            res = {'msg': 'id not present in Database'}
-        return JsonResponse(res)
-
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
-  
+class Customer_details(APIView):
+    """
+    Retrieve, update or delete a snippet instance.
+    """
+    def get_object(self, pk):
+        try:
+            return Studentapi.objects.get(pk=pk)
+        except Studentapi.DoesNotExist:
+            raise Http404
+
+    def get(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = Studentserializer(snippet)
+        return Response(serializer.data)
+
+    def put(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        serializer = Studentserializer(snippet, data=request.data,partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk, format=None):
+        snippet = self.get_object(pk)
+        snippet.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
