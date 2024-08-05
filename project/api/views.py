@@ -244,7 +244,8 @@ from rest_framework import status
 #         else:
 #             res = {'msg': 'id not present in Database'}
 #         return JsonResponse(res)
-#class based api
+#class based api with dyananic url
+
 class Customer_list(APIView):
     """
     List all snippets, or create a new snippet.
