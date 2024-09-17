@@ -136,52 +136,51 @@ from rest_framework import status
 #             res = {'msg': 'id not present in Database'}
 #             return JsonResponse(res)
 
-# #function based api
-# @api_view(['GET', 'POST'])  
-# def movie_list(request): 
-#     if request.method=='GET':
-#         movies = Studentapi.objects.all() 
-#         serializer=Studentserializer(movies,many=True)
-#         return Response(serializer.data) 
+@api_view(['GET', 'POST'])  
+def movie_list(request): 
+    if request.method=='GET':
+        movies = Studentapi.objects.all() 
+        serializer=Studentserializer(movies,many=True)
+        return Response(serializer.data) 
     
-#     elif request.method=='POST':
-#         serializer=Studentserializer(data=request.data) 
-#         if serializer.is_valid(): 
-#             serializer.save() 
-#             return Response(serializer.data) 
-#         else: return Response(serializer.errors)
+    elif request.method=='POST':
+        serializer=Studentserializer(data=request.data) 
+        if serializer.is_valid(): 
+            serializer.save() 
+            return Response(serializer.data) 
+        else: return Response(serializer.errors)
 
-# @api_view(['GET', 'PUT','DELETE']) 
-# def movie_details(request,pk):
-#     id = Studentapi.objects.get(pk=pk)
-#     if id:
-#         if request.method=='GET': 
-#             movie=Studentapi.objects.get(pk=pk) 
-#             serializer = Studentserializer(movie) 
-#             return Response(serializer.data) 
+@api_view(['GET', 'PUT','DELETE']) 
+def movie_details(request,pk):
+    id = Studentapi.objects.get(id=pk)
+    if id:
+        if request.method=='GET': 
+            movie=Studentapi.objects.get(id=pk) 
+            serializer = Studentserializer(movie) 
+            return Response(serializer.data) 
         
-#         elif request.method=='PUT': 
-#             movie=Studentapi.objects.get(pk=pk) 
-#             serializer = Studentserializer(movie,data=request.data,partial=True) 
-#             if serializer.is_valid(): 
-#                 serializer.save() 
-#                 return Response(serializer.data) 
-#             else: return Response(serializer.errors) 
+        elif request.method=='PUT': 
+            movie=Studentapi.objects.get(id=pk) 
+            serializer = Studentserializer(movie,data=request.data,partial=True) 
+            if serializer.is_valid(): 
+                serializer.save() 
+                return Response(serializer.data) 
+            else: return Response(serializer.errors) 
         
-#         elif request.method=='PATCH': 
-#             movie=Studentapi.objects.get(pk=pk) 
-#             serializer = Studentserializer(movie,data=request.data,partial=True) 
-#             if serializer.is_valid(): 
-#                 serializer.save() 
-#                 return Response(serializer.data) 
-#             else: return Response(serializer.errors) 
-#         elif request.method=='DELETE': 
-#                 movie=Studentapi.objects.get(pk=pk) 
-#                 movie.delete() 
-#                 return Response({'msg':"Data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
-#     else:
-#         res = {'msg': 'id not present in Database'}
-#         return Response(res)
+        elif request.method=='PATCH': 
+            movie=Studentapi.objects.get(pk=pk) 
+            serializer = Studentserializer(movie,data=request.data,partial=True) 
+            if serializer.is_valid(): 
+                serializer.save() 
+                return Response(serializer.data) 
+            else: return Response(serializer.errors) 
+        elif request.method=='DELETE': 
+                movie=Studentapi.objects.get(pk=pk) 
+                movie.delete() 
+                return Response({'msg':"Data deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+    else:
+        res = {'msg': 'id not present in Database'}
+        return Response(res)
      
 
     
@@ -246,46 +245,47 @@ from rest_framework import status
 #         return JsonResponse(res)
 #class based api with dyananic url
 
-class Customer_list(APIView):
-    """
-    List all snippets, or create a new snippet.
-    """
-    def get(self, request,):
-        snippets = Studentapi.objects.all()
-        serializer = Studentserializer(snippets, many=True)
-        return Response(serializer.data)
+# class Customer_list(APIView):
+#     """
+#     List all snippets, or create a new snippet.
+#     """
 
-    def post(self, request,):
-        serializer = Studentserializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def get(self, request,):
+#         snippets = Studentapi.objects.all()
+#         serializer = Studentserializer(snippets, many=True)
+#         return Response(serializer.data)
+
+#     def post(self, request,):
+#         serializer = Studentserializer(data=request.data)
+#         if serializer.is_valid():
+#           serializer.save()
+#         return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
  
-class Customer_details(APIView):
-    """
-    Retrieve, update or delete a snippet instance.
-    """
-    def get_object(self, pk):
-        try:
-            return Studentapi.objects.get(pk=pk)
-        except Studentapi.DoesNotExist:
-            raise Http404
+# class Customer_details(APIView):
+#     """
+#     Retrieve, update or delete a snippet instance.
+#     """
+#     def get_object(self, pk):
+#         try:
+#             return Studentapi.objects.get(id=pk)
+#         except Studentapi.DoesNotExist:
+#             raise Http404
 
-    def get(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = Studentserializer(snippet)
-        return Response(serializer.data)
+#     def get(self, request, pk,  ):
+#         snippet = self.get_object(pk)
+#         serializer = Studentserializer(snippet)
+#         return Response(serializer.data)
 
-    def put(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        serializer = Studentserializer(snippet, data=request.data,partial=True)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def put(self, request, pk,):
+#         snippet = self.get_object(pk)
+#         serializer = Studentserializer(snippet, data=request.data,partial=True)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def delete(self, request, pk, format=None):
-        snippet = self.get_object(pk)
-        snippet.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+#     def delete(self, request, pk,):
+#         snippet = self.get_object(pk)
+#         snippet.delete()
+#         return Response(status=status.HTTP_204_NO_CONTENT)
